@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Suretyscore — Kalkulator Kelayakan Penjaminan 5C</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Latar belakang gradient + blob kaca mengambang -->
+  <div class="bg-scene" aria-hidden="true">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+  </div>
+
+  <header class="topbar glass">
+    <div class="brand">
+      <span class="brand-mark">S</span>
+      <div class="brand-text">
+        <strong>Suretyscore</strong>
+        <small>Kalkulator kelayakan penjaminan berbasis 5C</small>
+      </div>
+    </div>
+    <div class="api-status" id="apiStatus">
+      <span class="dot" id="apiDot"></span>
+      <span id="apiStatusText">Memeriksa API…</span>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ============ FORM 5C ============ -->
+    <section class="panel-form glass" aria-labelledby="formTitle">
+      <div class="panel-form-head">
+        <h1 id="formTitle">Data Pengajuan Principal</h1>
+        <p>Isi kelima aspek 5C berikut untuk menghitung skor kelayakan penjaminan secara instan.</p>
+      </div>
+
+      <form id="scoreForm" novalidate>
+
+        <!-- CHARACTER -->
+        <fieldset class="c-section">
+          <legend class="c-legend">
+            <span class="c-icon" data-c="character">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 12c2.5 0 4.5-2 4.5-4.5S14.5 3 12 3 7.5 5 7.5 7.5 9.5 12 12 12Z" stroke="currentColor" stroke-width="1.6"/><path d="M4 21c1-4.2 4.3-7 8-7s7 2.8 8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <span class="c-title">Character <em>— Karakter &amp; rekam jejak</em></span>
+          </legend>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Kolektibilitas SLIK OJK Direksi</span>
+              <select name="SLIK_OJK_Direksi" required>
+                <option value="1">1 — Lancar</option>
+                <option value="2">2 — Dalam Perhatian Khusus</option>
+                <option value="3">3 — Kurang Lancar</option>
+                <option value="4">4 — Diragukan</option>
+                <option value="5">5 — Macet</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Riwayat klaim (3 tahun terakhir)</span>
+              <input type="number" name="Riwayat_Klaim" min="0" step="1" value="0" required />
+            </label>
+
+            <label class="field">
+              <span>Lama operasional (tahun)</span>
+              <input type="number" name="Lama_Operasional" min="0" step="0.1" value="5" required />
+            </label>
+
+            <div class="field">
+              <span>Hubungan dengan supplier</span>
+              <div class="segmented" data-name="Hubungan_Supplier" role="radiogroup">
+                <button type="button" class="seg-btn active" data-value="1">Ada</button>
+                <button type="button" class="seg-btn" data-value="0">Tidak ada</button>
+              </div>
+              <input type="hidden" name="Hubungan_Supplier" value="1" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- CAPITAL -->
+        <fieldset class="c-section">
+          <legend class="c-legend">
+            <span class="c-icon" data-c="capital">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <span class="c-title">Capital <em>— Kondisi keuangan</em></span>
+          </legend>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Current Ratio (rasio likuiditas)</span>
+              <input type="number" name="Current_Ratio" min="0" step="0.01" value="1.5" required />
+            </label>
+            <label class="field">
+              <span>Debt to Equity Ratio (DER)</span>
+              <input type="number" name="Debt_to_Equity_Ratio_DER" min="0" step="0.01" value="1.0" required />
+            </label>
+            <label class="field">
+              <span>Net Profit Margin — NPM (%)</span>
+              <input type="number" name="Net_Profit_Margin_NPM" step="0.1" value="5" required />
+            </label>
+            <label class="field">
+              <span>Return on Asset — ROA (%)</span>
+              <input type="number" name="Return_on_Asset_ROA" step="0.1" value="4" required />
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- CAPACITY -->
+        <fieldset class="c-section">
+          <legend class="c-legend">
+            <span class="c-icon" data-c="capacity">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="7" width="15" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M21 10v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <span class="c-title">Capacity <em>— Kapasitas eksekusi</em></span>
+          </legend>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Lama penjaminan diajukan (bulan)</span>
+              <input type="number" name="Lama_Penjaminan" min="0" step="1" value="12" required />
+            </label>
+            <label class="field">
+              <span>Jumlah proyek berjalan</span>
+              <input type="number" name="Jumlah_Proyek_Berjalan" min="0" step="1" value="2" required />
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- COLLATERAL -->
+        <fieldset class="c-section">
+          <legend class="c-legend">
+            <span class="c-icon" data-c="collateral">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="c-title">Collateral <em>— Agunan/jaminan</em></span>
+          </legend>
+
+          <div class="field-grid">
+            <label class="field field-currency">
+              <span>Nilai agunan (Rp)</span>
+              <input type="number" name="Nilai_Agunan" min="0" step="1000000" value="500000000" required />
+              <small class="currency-preview" data-preview-for="Nilai_Agunan">Rp 500.000.000</small>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- CONDITION -->
+        <fieldset class="c-section">
+          <legend class="c-legend">
+            <span class="c-icon" data-c="condition">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M3 17c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 12c1.5-4 3-6 5-6s3.5 2 5 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            </span>
+            <span class="c-title">Condition <em>— Kondisi proyek &amp; makro</em></span>
+          </legend>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Jenis bond</span>
+              <select name="Jenis_Bond" required>
+                <option value="Bid Bond">Bid Bond</option>
+                <option value="Performance Bond" selected>Performance Bond</option>
+                <option value="Advance Payment Bond">Advance Payment Bond</option>
+                <option value="Maintenance Bond">Maintenance Bond</option>
+              </select>
+            </label>
+
+            <label class="field field-currency">
+              <span>Nilai kontrak proyek (Rp)</span>
+              <input type="number" name="Nilai_Proyek" min="1" step="1000000" value="5000000000" required />
+              <small class="currency-preview" data-preview-for="Nilai_Proyek">Rp 5.000.000.000</small>
+            </label>
+
+            <label class="field field-range">
+              <span>Persentase penjaminan <b id="pctLabel">10%</b></span>
+              <input type="range" name="Persentase_Penjaminan" min="1" max="100" step="0.5" value="10" />
+            </label>
+
+            <div class="field">
+              <span>Jenis proyek</span>
+              <div class="segmented" data-name="Jenis_Proyek" role="radiogroup">
+                <button type="button" class="seg-btn active" data-value="Pemerintah">Pemerintah</button>
+                <button type="button" class="seg-btn" data-value="Swasta">Swasta</button>
+              </div>
+              <input type="hidden" name="Jenis_Proyek" value="Pemerintah" />
+            </div>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="btn-primary" id="submitBtn">
+          <span>Hitung Skor Kelayakan</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- ============ HASIL ============ -->
+    <aside class="panel-result glass" id="resultPanel" aria-live="polite">
+
+      <div class="result-empty" id="resultEmpty">
+        <div class="gauge-ghost" aria-hidden="true">
+          <svg viewBox="0 0 220 130">
+            <path d="M20 120 A90 90 0 0 1 200 120" fill="none" stroke="rgba(99,102,241,0.18)" stroke-width="16" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p>Lengkapi form di sebelah kiri lalu tekan <strong>Hitung Skor Kelayakan</strong> untuk melihat hasil analisis di panel ini.</p>
+      </div>
+
+      <div class="result-loading hidden" id="resultLoading">
+        <div class="spinner"></div>
+        <p>Menghitung skor &amp; menyusun penjelasan SHAP…</p>
+      </div>
+
+      <div class="result-error hidden" id="resultError">
+        <p id="resultErrorText">Terjadi kesalahan.</p>
+      </div>
+
+      <div class="result-content hidden" id="resultContent">
+
+        <div class="gauge-wrap">
+          <svg viewBox="0 0 220 130" class="gauge-svg">
+            <defs>
+              <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#ef4444" />
+                <stop offset="50%" stop-color="#f59e0b" />
+                <stop offset="100%" stop-color="#10b981" />
+              </linearGradient>
+            </defs>
+            <path d="M20 120 A90 90 0 0 1 200 120" fill="none" stroke="rgba(148,163,184,0.25)" stroke-width="16" stroke-linecap="round"/>
+            <path d="M20 120 A90 90 0 0 1 200 120" fill="none" stroke="url(#gaugeGrad)" stroke-width="16" stroke-linecap="round" opacity="0.9"/>
+            <g id="needleGroup" transform="rotate(-90 110 120)">
+              <line x1="110" y1="120" x2="110" y2="42" stroke="#1e2235" stroke-width="3.5" stroke-linecap="round" />
+              <circle cx="110" cy="120" r="7" fill="#1e2235" />
+              <circle cx="110" cy="120" r="3" fill="#fff" />
+            </g>
+          </svg>
+          <div class="gauge-readout">
+            <span class="gauge-score" id="gaugeScore">—</span>
+            <span class="gauge-max">/ 1000</span>
+          </div>
+        </div>
+
+        <div class="decision-badge" id="decisionBadge">
+          <span id="decisionText">—</span>
+        </div>
+        <p class="proba-line" id="probaLine"></p>
+
+        <div class="breakdown-block">
+          <h2>Kontribusi Risiko per 5C</h2>
+          <ul class="breakdown-list" id="breakdownList"></ul>
+        </div>
+
+        <div class="factors-block">
+          <h2>Faktor Paling Berpengaruh</h2>
+          <ul class="factors-list" id="factorsList"></ul>
+        </div>
+
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- ============ ANALISIS KUALITATIF 5C (GEMINI) ============ -->
+  <section class="qualitative-section">
+
+    <div class="qualitative-header">
+      <span class="qualitative-badge">Ditenagai Gemini API</span>
+      <h2>Analisis Kualitatif 5C</h2>
+      <p>Pelengkap skor kuantitatif di atas — menilai reputasi, kepatuhan, dan narasi kualitatif due diligence yang tidak tertangkap oleh data numerik semata.</p>
+    </div>
+
+    <div class="qualitative-grid">
+
+      <!-- ---- KARTU 1: REPUTASI & KEPATUHAN ---- -->
+      <div class="glass qual-card">
+        <div class="qual-card-head">
+          <span class="qual-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M11 3a8 8 0 1 0 5.29 14.02l4.35 4.35a1 1 0 0 0 1.41-1.41l-4.35-4.35A8 8 0 0 0 11 3Z" stroke="currentColor" stroke-width="1.6"/><path d="m8 11 2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div>
+            <h3>Reputasi &amp; Daftar Hitam</h3>
+            <p>Cek berita negatif publik dan status Daftar Hitam LKPP secara instan.</p>
+          </div>
+        </div>
+
+        <form id="reputationForm" novalidate>
+          <label class="field">
+            <span>Nama perusahaan</span>
+            <input type="text" name="nama_perusahaan" placeholder="mis. PT Contoh Konstruksi Nusantara" required minlength="2" />
+          </label>
+          <div class="field-grid">
+            <label class="field">
+              <span>Sektor usaha</span>
+              <input type="text" name="sektor" placeholder="mis. Konstruksi Infrastruktur" required minlength="2" />
+            </label>
+            <label class="field">
+              <span>Lokasi</span>
+              <input type="text" name="lokasi" placeholder="mis. Surabaya, Jawa Timur" required minlength="2" />
+            </label>
+          </div>
+          <button type="submit" class="btn-secondary" id="reputationBtn">
+            <span>Cari Analisis Reputasi</span>
+          </button>
+        </form>
+
+        <div class="qual-result" id="reputationResult">
+          <div class="qual-empty" id="reputationEmpty">Hasil analisis reputasi &amp; status Daftar Hitam akan tampil di sini.</div>
+          <div class="qual-loading hidden" id="reputationLoading">
+            <div class="spinner"></div>
+            <p>Gemini sedang menelusuri berita &amp; memeriksa Daftar Hitam…</p>
+          </div>
+          <div class="qual-error hidden" id="reputationError"></div>
+          <div class="qual-content hidden" id="reputationContent">
+            <p class="qual-warning hidden" id="reputationWarning"></p>
+            <h4>Ringkasan Berita Negatif</h4>
+            <p class="qual-text" id="reputationSummary"></p>
+
+            <div id="reputationSourcesBlock" class="hidden">
+              <h4>Sumber Berita</h4>
+              <ul class="source-list" id="reputationSources"></ul>
+            </div>
+
+            <h4>Status Daftar Hitam INAPROC</h4>
+            <div class="blacklist-badge" id="blacklistBadge"></div>
+            <ul class="blacklist-matches" id="blacklistMatches"></ul>
+            <p class="qual-note" id="blacklistNote"></p>
+            <a id="blacklistManualLink" href="#" target="_blank" rel="noopener" class="manual-link">Buka pencarian manual di daftar-hitam.inaproc.id →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- KARTU 2: NARASI KUALITATIF & REKOMENDASI ---- -->
+      <div class="glass qual-card">
+        <div class="qual-card-head">
+          <span class="qual-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H7l-3 3V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 9h8M8 12h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          </span>
+          <div>
+            <h3>Narasi Kualitatif &amp; Rekomendasi</h3>
+            <p>Sintesiskan scope of work, wawancara manajemen, dan kondisi bisnis menjadi rekomendasi komite.</p>
+          </div>
+        </div>
+
+        <form id="riskNarrativeForm" novalidate>
+          <label class="field">
+            <span>Scope of work &amp; kompleksitas teknis</span>
+            <textarea name="scope_of_work" rows="3" placeholder="Uraikan ruang lingkup pekerjaan, metode konstruksi, tingkat kesulitan teknis..." required minlength="10"></textarea>
+          </label>
+          <label class="field">
+            <span>Ringkasan wawancara manajemen</span>
+            <textarea name="ringkasan_wawancara_manajemen" rows="3" placeholder="Poin-poin penting dari wawancara dengan manajemen principal..." required minlength="10"></textarea>
+          </label>
+          <label class="field">
+            <span>Kelayakan &amp; kondisi lingkungan bisnis</span>
+            <textarea name="kondisi_lingkungan_bisnis" rows="3" placeholder="Kondisi sektor, tren makro, risiko eksternal yang relevan..." required minlength="10"></textarea>
+          </label>
+          <button type="submit" class="btn-secondary" id="riskNarrativeBtn">
+            <span>Analisis Kualitatif 5C</span>
+          </button>
+        </form>
+
+        <div class="qual-result" id="riskResult">
+          <div class="qual-empty" id="riskEmpty">Analisis mitigasi risiko, early warning signals, dan rekomendasi final akan tampil di sini.</div>
+          <div class="qual-loading hidden" id="riskLoading">
+            <div class="spinner"></div>
+            <p>Gemini sedang menyusun analisis komprehensif…</p>
+          </div>
+          <div class="qual-error hidden" id="riskError"></div>
+          <div class="qual-content hidden" id="riskContent">
+            <div class="risk-block">
+              <h4>🛡️ Mitigasi Risiko</h4>
+              <p class="qual-text" id="riskMitigasi"></p>
+            </div>
+            <div class="risk-block">
+              <h4>⚠️ Early Warning Signals</h4>
+              <p class="qual-text" id="riskEws"></p>
+            </div>
+            <div class="risk-block risk-block-final">
+              <h4>✅ Rekomendasi Final</h4>
+              <p class="qual-text" id="riskRekomendasi"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footnote">
+    Model demonstrasi menggunakan data sintetis · dibangun dengan FastAPI + XGBoost + SHAP
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
