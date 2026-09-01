@@ -78,10 +78,10 @@ class ModelService:
 
     def _decision(self, proba: float) -> str:
         if proba < self.lower_bound:
-            return "Layak Dijamin (Auto-Approve)"
+            return "Low Risk"
         elif proba > self.upper_bound:
-            return "Ditolak (Auto-Reject)"
-        return "Perlu Review Manual (Manual Review)"
+            return "High Risk"
+        return "Medium Risk (Lakukan Manual Review)"
 
     def _base_feature_of(self, transformed_name: str) -> str:
         """Cocokkan nama fitur hasil ColumnTransformer/OneHot ke fitur dasarnya."""

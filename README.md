@@ -65,8 +65,7 @@ suretyship_webapp/
 
 ## Mengganti dengan Data Riil (Skor Kuantitatif)
 
-Ganti fungsi `gen_data()` di `app/train_model.py` dengan proses load data historis klaim
-penjaminan Anda (mis. `pd.read_csv("data_klaim.csv")`), lalu jalankan ulang `python train_model.py`.
+Ganti fungsi `gen_data()` di `app/train_model.py` dengan proses load data historis klaim Anda (mis. `pd.read_csv("data_klaim.csv")`), lalu jalankan ulang `python train_model.py`.
 Pastikan kolom-kolom pada data Anda persis sama namanya dengan yang didefinisikan di `RAW_COLUMNS`
 pada file tersebut.
 
@@ -196,4 +195,5 @@ Cek status server — dipakai frontend untuk indikator titik hijau/merah di topb
   benar-benar dieksekusi model — lihat halaman pricing Gemini API untuk detail terkini.
 - Pertimbangkan menambahkan rate-limiting pada endpoint `/api/qualitative/*` karena setiap
   panggilan mengonsumsi kuota/biaya Gemini API dan bisa memakan waktu beberapa detik.
-
+- Disclaimer Kustomisasi: Variabel/fitur yang digunakan pada model machine learning beserta tata
+  letak dan elemen UI pada frontend merupakan kerangka baseline yang bersifat fleksibel. Anda dapat dengan bebas mengubah, menambah, atau menyesuaikannya dengan kebutuhan, kebijakan underwriting, maupun Standar Operasional Prosedur (SOP) spesifik di perusahaan Anda.
